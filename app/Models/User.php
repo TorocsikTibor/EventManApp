@@ -4,6 +4,7 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
@@ -42,4 +43,25 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
     ];
+
+    public function eventOwner(): BelongsTo
+    {
+        return $this->belongsTo(Event::class, 'owner_id');
+    }
+
+    public function event()
+    {
+        return $this->belongsToMany(Event::class)->using(EventUser::class);
+    }
+
+    public function eventJoin()
+    {
+        return $this->belongsToMany(Event::class)->using(EventJoinRequest::class);
+    }
+
+    public function eventVisibility()
+    {
+        return $this->belongsToMany(Event::class)->using(EventVisibility::class);
+    }
+
 }
