@@ -20,7 +20,7 @@
             </div>
         </div>
         <div class="col-md-8">
-
+            <a class="btn btn-primary" href="{{ route('showCreate') }}">Create event</a>
         </div>
 
 
