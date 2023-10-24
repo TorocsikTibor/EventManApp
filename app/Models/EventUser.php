@@ -13,6 +13,7 @@ class EventUser extends Pivot
 
     protected $guarded = ['id'];
     protected $table = 'event_user';
+    public $timestamps = false;
 
     public function event(): BelongsTo
     {

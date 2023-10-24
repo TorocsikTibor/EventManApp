@@ -44,8 +44,7 @@
                     </div>
                     <div class="form-label" id="inputField">
                         <label>Who can see the event</label>
-                        <select class="form-select users" multiple="" aria-label="multiple select example"
-                                name="users[]">
+                        <select class="form-select users" name="users[]" multiple="" aria-label="multiple select example">
                             @foreach($users as $user)
                                 <option value="{{$user->id}}">{{$user->name}}</option>
                             @endforeach
@@ -73,7 +72,8 @@
                 e.preventDefault();
 
                 let formData = new FormData($('#AddEventForm')[0]);
-                
+
+                console.log(formData);
                 $.ajaxSetup({
                     headers: {
                         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')

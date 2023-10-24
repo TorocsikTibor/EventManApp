@@ -12,6 +12,7 @@ class EventVisibility extends Pivot
 
     protected $guarded = ['id'];
     protected $table = 'event_visibility';
+    public $timestamps = false;
 
     public function userVisibility()
     {

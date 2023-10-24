@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Event;
+use App\Models\EventVisibility;
 use App\Models\User;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
@@ -56,6 +57,15 @@ class EventController extends Controller
         $event->description = $validated['description'];
         $event->is_private = 1;
         $event->save();
+
+        if (isset($request->users)) {
+            foreach ($request->users as $user) {
+                $eventVisibility = new EventVisibility();
+                $eventVisibility->user_id = $user;
+                $eventVisibility->event_id = $event->id;
+                $eventVisibility->save();
+            }
+        }
 
         return response()->json([
             'status' => 200,
