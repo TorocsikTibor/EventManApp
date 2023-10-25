@@ -52,6 +52,7 @@
                     </div>
                     <div class="form-label">
                         <input type="submit" class="btn btn-primary add_event" value="Create">
+                        <a href="{{ route('home') }}" class="btn btn-primary">Back</a>
                     </div>
                 </form>
             </div>

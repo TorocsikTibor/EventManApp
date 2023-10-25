@@ -146,4 +146,14 @@ class EventController extends Controller
         ]);
 
     }
+
+    public function delete(int $id)
+    {
+        Event::destroy($id);
+
+        return response()->json([
+            'message' => 'success',
+            'status' => 200,
+        ]);
+    }
 }

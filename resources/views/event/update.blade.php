@@ -54,6 +54,10 @@
                     </div>
                     <div class="form-label">
                         <input type="submit" class="btn btn-primary update_event" value="Update">
+                        <a href="{{ route('home') }}" class="btn btn-primary">Back</a>
+                        <input class="id" type="hidden"
+                               value="{{ $event->id }}">
+                        <input class="btn btn-danger delete_event" type="submit" value="Delete">
                     </div>
                 </form>
             </div>
@@ -104,6 +108,28 @@
                     }
                 });
             });
+
+            $(document).on('click', '.delete_event', function (e) {
+                e.preventDefault();
+
+                $.ajaxSetup({
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    }
+                });
+
+                $.ajax({
+                    type: "DELETE",
+                    url: "{{ route('eventDelete', [ 'id' => $event->id ]) }}",
+                    // data: id,
+                    success: function (result) {
+                        $('#success_message').html("");
+                        $('#success_message').addClass('alert alert-success');
+                        $('#success_message').text('Event deleted');
+                    }
+                });
+            });
+
         });
     </script>
 @endsection
