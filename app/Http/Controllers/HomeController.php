@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\Event;
+use App\Models\EventVisibility;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class HomeController extends Controller
 {
@@ -24,7 +26,18 @@ class HomeController extends Controller
      */
     public function index()
     {
-        $events = Event::all();
-        return view('home', ['events' => $events]);
+        $visibleEvents = Event::where('is_private', 0)->get();
+
+        $privateEvents = Event::where('is_private', 1)->with('userVisibility:id,name')->get();
+
+        foreach ($privateEvents as $privateEvent) {
+            foreach ($privateEvent->userVisibility as $privateUser) {
+                if ($privateUser->id === Auth::id()) {
+                    $visibleEvents = $visibleEvents->push($privateEvent);
+                }
+            }
+        }
+
+        return view('home', ['events' => $visibleEvents]);
     }
 }

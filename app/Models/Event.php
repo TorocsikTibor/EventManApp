@@ -30,9 +30,9 @@ class Event extends Model
         return $this->belongsToMany(User::class)->using(EventJoinRequest::class);
     }
 
-    public function userVisiblity(): BelongsToMany
+    public function userVisibility(): BelongsToMany
     {
-        return $this->belongsToMany(User::class)->using(EventVisibility::class);
+        return $this->belongsToMany(User::class, 'event_visibility', 'event_id', 'user_id');
     }
 
 }

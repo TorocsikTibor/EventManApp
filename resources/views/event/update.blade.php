@@ -14,8 +14,6 @@
                 <h4>Update event</h4>
                 <form id="AddEventForm" method="post" enctype="multipart/form-data">
                     <div class="form-label">
-
-                        {{$event->date}}
                         <label for="name">Name:</label>
                         <input type="text" class="form-control name" value="{{ $event->name }}" name="name">
                     </div>

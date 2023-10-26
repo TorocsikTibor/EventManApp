@@ -16,12 +16,12 @@ class EventVisibility extends Pivot
 
     public function userVisibility()
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class, 'user_id');
     }
 
     public function eventVisibility()
     {
-        return $this->belongsTo(Event::class);
+        return $this->belongsTo(Event::class, 'event_id');
     }
 
 }
