@@ -25,4 +25,5 @@ Route::post('/event/create', [\App\Http\Controllers\EventController::class, 'cre
 Route::get('/event/update/{id}', [\App\Http\Controllers\EventController::class, 'showUpdate'])->name('showUpdate');
 Route::post('/event/update/{id}', [\App\Http\Controllers\EventController::class, 'update'])->name('eventUpdate');
 Route::delete('/event/delete/{id}', [\App\Http\Controllers\EventController::class, 'delete'])->name('eventDelete');
+Route::post('/event/attend/{id}', [\App\Http\Controllers\EventController::class, 'attend'])->name('attend');
 

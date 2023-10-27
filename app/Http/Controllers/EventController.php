@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Event;
+use App\Models\EventUser;
 use App\Models\EventVisibility;
 use App\Models\User;
 use Illuminate\Contracts\View\Factory;
@@ -71,7 +72,7 @@ class EventController extends Controller
 
         return response()->json([
             'status' => 200,
-            'message' => 'Competitor created successfully',
+            'message' => 'Event created successfully',
         ]);
     }
 
@@ -142,7 +143,7 @@ class EventController extends Controller
 
         return response()->json([
             'status' => 200,
-            'message' => 'Competitor created successfully',
+            'message' => 'Event updated successfully',
         ]);
 
     }
@@ -154,6 +155,19 @@ class EventController extends Controller
         return response()->json([
             'message' => 'success',
             'status' => 200,
+        ]);
+    }
+
+    public function attend(int $id)
+    {
+        $eventUser = new EventUser();
+        $eventUser->user_id = Auth::id();
+        $eventUser->event_id = $id;
+        $eventUser->save();
+
+        return response()->json([
+            'status' => 200,
+            'message' => 'Event join successfully',
         ]);
     }
 }
