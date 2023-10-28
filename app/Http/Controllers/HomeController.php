@@ -3,11 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Event;
-use App\Models\EventUser;
-use App\Models\EventVisibility;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use function Symfony\Component\String\b;
 
 class HomeController extends Controller
 {
@@ -26,19 +23,12 @@ class HomeController extends Controller
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function index()
+    public function index(Request $request)
     {
-        $visibleEvents = Event::where('is_private', 0)->with('user:id,name')->get();
 
-        $privateEvents = Event::where('is_private', 1)->with(['userVisibility:id,name' , 'user:id,name'])->get();
-
-        foreach ($privateEvents as $privateEvent) {
-            foreach ($privateEvent->userVisibility as $privateUser) {
-                if ($privateUser->id === Auth::id()) {
-                    $visibleEvents = $visibleEvents->push($privateEvent);
-                }
-            }
-        }
+        $visibleEvents = Event::with('userVisibility:id')->where('is_private', 0)->orWhereHas('userVisibility', function ($q) {
+            $q->where('users.id', Auth::id());
+        })->get();
 
         $joinedEventIds = [];
 
@@ -50,7 +40,28 @@ class HomeController extends Controller
             $joinedEventIds[] = $eventUser->id;
         }
 
-//        dd($joinedEventIds);
         return view('home', ['events' => $visibleEvents, 'joinedEventIds' => $joinedEventIds]);
+    }
+
+    public function search(Request $request)
+    {
+        $searchValue = $request->input('searchValue');
+        $inputValue = $request->input('select');
+
+        $searchedEvents = Event::with('userVisibility:id')
+            ->where(function ($q) use ($inputValue, $searchValue) {
+                $q->where('is_private', 0) // Get non-private events
+                ->orWhere(function ($sq) use ($inputValue, $searchValue) {
+                    $sq->where('is_private', 1) // Get private events
+                    ->whereHas('userVisibility', function ($q) {
+                        $q->where('users.id', Auth::id());
+                    });
+                });
+            })
+            ->where("$inputValue", 'LIKE', '%'.$searchValue.'%')->with('eventOwner')
+            ->get();
+
+            return response()->json($searchedEvents);
+
     }
 }
