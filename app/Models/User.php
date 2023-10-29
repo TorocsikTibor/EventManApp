@@ -55,11 +55,6 @@ class User extends Authenticatable
         return $this->belongsToMany(Event::class)->using(EventUser::class);
     }
 
-    public function eventJoin()
-    {
-        return $this->belongsToMany(Event::class)->using(EventJoinRequest::class);
-    }
-
     public function eventVisibility()
     {
         return $this->belongsToMany(Event::class, 'event_visibility', 'user_id', 'event_id');

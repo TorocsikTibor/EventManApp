@@ -5,22 +5,20 @@
     <div class="container">
         <div class="row justify-content-center">
 
-            <div id="saveform_errlist">
-            </div>
+            <div id="saveform_errlist"></div>
 
-            <div id="success_message">
-            </div>
+            <div id="success_message"></div>
 
             <div class="col-md-8">
                 <a class="btn btn-primary" href="{{ route('showCreate') }}">Create event</a>
             </div>
 
-            <div class="col-md-8">
+            <div class="col-md-10">
                 <div class="input-group-prepend">
                     <form method="get" action="{{ route('search') }}">
                         <label class="form-label" for="search">Search:</label>
                         <div class="input-group mb-3">
-                            <div class="col-2">
+                            <div class="col-4">
                                 <select class="form-select select" name="select">
                                     <option value="name">Name</option>
                                     <option value="date">Date</option>
@@ -35,16 +33,14 @@
                     </form>
                 </div>
             </div>
-            <div class="col-md-8 add_event">
-            </div>
+            <div class="col-md-8 add_event"></div>
             <div class="col-md-8 remove_event">
                 @foreach($events as $event)
-                    <div class="card" style="width: 24rem;">
+                    <div class="card" style="width: 22rem;">
                         <img class="card-img-top" src="public/images/{{ $event->image }}" alt="Card image cap">
                         <div class="card-body">
-                            <h4><a class="card-title"
-                                   href="{{ route('eventUpdate', [ 'id' => $event->id ]) }}">{{ $event->name }}</a></h4>
                             @if( $event->owner_id !== Auth::id() )
+                                <h4 class="card-title">{{ $event->name }}</h4>
                                 @if( in_array($event->id, $joinedEventIds))
                                     <input type="button" class="btn btn-primary" value="Attend"
                                            disabled>
@@ -53,6 +49,9 @@
                                     <input type="button" class="btn btn-primary attend" id="btn_change{{$event->id}}"
                                            value="Attend">
                                 @endif
+                            @else
+                                <a class="card-title" href="{{ route('eventUpdate', [ 'id' => $event->id ]) }}"><h4>{{ $event->name }}</h4></a>
+
                             @endif
                             <ul class="list-group list-group-flush">
                                 <li class="list-group-item">Date: {{ $event->date }}</li>
@@ -71,6 +70,5 @@
 
     <script src="{{ asset('public/js/search.js') }}"></script>
     <script src="{{ asset('public/js/append.js') }}"></script>
-
 
 @endsection

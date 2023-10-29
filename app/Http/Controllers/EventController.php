@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Models\Event;
-use App\Models\EventUser;
 use App\Models\EventVisibility;
 use App\Models\User;
 use App\services\EventService;
@@ -12,7 +11,6 @@ use Illuminate\Contracts\View\View;
 use Illuminate\Foundation\Application;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 
 class EventController extends Controller
@@ -44,7 +42,6 @@ class EventController extends Controller
 
         if ($validator->fails()) {
             return response()->json([
-                'status' => 400,
                 'errors' => $validator->messages(),
             ]);
         }
@@ -70,7 +67,7 @@ class EventController extends Controller
 
     }
 
-    public function showUpdate(int $id)
+    public function showUpdate(int $id): View|Application|Factory
     {
         $event = Event::find($id);
         $users = User::all();
@@ -84,7 +81,7 @@ class EventController extends Controller
         return view('event/update', [ 'event' => $event, 'users' => $users, 'selectedUsers' => $selectedUsers ]);
     }
 
-    public function update(Request $request, int $id)
+    public function update(Request $request, int $id): JsonResponse
     {
         $validator = Validator::make($request->all(), [
             'name' => 'required|string',
@@ -97,7 +94,6 @@ class EventController extends Controller
 
         if ($validator->fails()) {
             return response()->json([
-                'status' => 400,
                 'errors' => $validator->messages(),
             ]);
         }
@@ -124,9 +120,9 @@ class EventController extends Controller
 
     }
 
-    public function delete(int $id)
+    public function delete(int $id): JsonResponse
     {
-        Event::destroy($id);
+        $this->eventService->delete($id);
 
         return response()->json([
             'message' => 'success',
@@ -134,12 +130,9 @@ class EventController extends Controller
         ]);
     }
 
-    public function attend(int $id)
+    public function attend(int $id): JsonResponse
     {
-        $eventUser = new EventUser();
-        $eventUser->user_id = Auth::id();
-        $eventUser->event_id = $id;
-        $eventUser->save();
+        $this->eventService->attend($id);
 
         return response()->json([
             'status' => 200,
