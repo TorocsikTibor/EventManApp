@@ -6,6 +6,7 @@ use App\Models\Event;
 use App\Models\EventUser;
 use App\Models\EventVisibility;
 use App\Models\User;
+use App\services\EventService;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
 use Illuminate\Foundation\Application;
@@ -16,6 +17,13 @@ use Illuminate\Support\Facades\Validator;
 
 class EventController extends Controller
 {
+    private EventService $eventService;
+
+    public function __construct(EventService $eventService)
+    {
+        $this->eventService = $eventService;
+    }
+
     public function showCreate(): View|Application|Factory
     {
         $users = User::all();
@@ -44,36 +52,22 @@ class EventController extends Controller
         $validated = $validator->validated();
         $is_private = isset($request->checkbox) ? 1 : 0;
 
-
-        $event = new Event();
-        $event->owner_id = Auth::id();
-        $event->name = $validated['name'];
-        $event->date = $validated['date'];
-        $event->location = $validated['location'];
-
-        $file = $request->file('image');
-        $filename = date('YmdHi') . $file->getClientOriginalName();
-        $file->move(public_path('public/images'), $filename);
-        $event->image = $filename;
-
-        $event->type = $validated['type'];
-        $event->description = $validated['description'];
-        $event->is_private = $is_private;
-        $event->save();
-
-        if (isset($request->users)) {
-            foreach ($request->users as $user) {
-                $eventVisibility = new EventVisibility();
-                $eventVisibility->user_id = $user;
-                $eventVisibility->event_id = $event->id;
-                $eventVisibility->save();
-            }
-        }
+        $this->eventService->updateOrCreate(
+            $validated['name'],
+            $validated['date'],
+            $validated['location'],
+            $request->file('image') ?? "",
+            $validated['type'],
+            $validated['description'],
+            $is_private,
+            $request->input('users'),
+        );
 
         return response()->json([
             'status' => 200,
             'message' => 'Event created successfully',
         ]);
+
     }
 
     public function showUpdate(int $id)
@@ -108,38 +102,20 @@ class EventController extends Controller
             ]);
         }
 
-        $validated = $validator->validated();
         $is_private = isset($request->checkbox) ? 1 : 0;
+        $validated = $validator->validated();
+        $imageName = Event::find($id);
 
-
-
-        $event = Event::find($id);
-        $event->owner_id = Auth::id();
-        $event->name = $validated['name'];
-        $event->date = $validated['date'];
-        $event->location = $validated['location'];
-
-        if ($request->file('image')) {
-            $file = $request->file('image');
-            $filename = date('YmdHi') . $file->getClientOriginalName();
-            $file->move(public_path('public/images'), $filename);
-            $event->image = $filename;
-        }
-
-        $event->type = $validated['type'];
-        $event->description = $validated['description'];
-        $event->is_private = $is_private;
-        $event->save();
-
-        if (isset($request->users)) {
-            EventVisibility::where('event_id', $event->id)->delete();
-            foreach ($request->users as $user) {
-                $eventVisibility = new EventVisibility();
-                $eventVisibility->user_id = $user;
-                $eventVisibility->event_id = $event->id;
-                $eventVisibility->save();
-            }
-        }
+        $this->eventService->updateOrCreate(
+            $validated['name'],
+            $validated['date'],
+            $validated['location'],
+            $request->file('image') ?? $imageName->image,
+            $validated['type'],
+            $validated['description'],
+            $is_private,
+            $request->input('users'),
+        );
 
         return response()->json([
             'status' => 200,

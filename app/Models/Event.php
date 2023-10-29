@@ -13,7 +13,7 @@ class Event extends Model
     use HasFactory;
 
     protected $table = 'events';
-    protected $guarded = ['id'];
+    protected $fillable = ['owner_id', 'name', 'date', 'location', 'image', 'type', 'description', 'is_private'];
 
     public function eventOwner(): BelongsTo
     {

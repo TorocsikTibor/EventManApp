@@ -10,7 +10,7 @@ class EventVisibility extends Pivot
 {
     use HasFactory;
 
-    protected $guarded = ['id'];
+    protected $fillable = ['user_id', 'event_id'];
     protected $table = 'event_visibility';
     public $timestamps = false;
 
