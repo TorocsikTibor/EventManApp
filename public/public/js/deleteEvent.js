@@ -2,8 +2,8 @@ $(document).ready(function () {
     $(document).on('click', '.delete_event', function (e) {
         e.preventDefault();
 
-        let id = $('.id').val();
-
+        let eventId = $(this).siblings(".deleteId").val();
+        console.log(eventId);
         $.ajaxSetup({
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -12,12 +12,12 @@ $(document).ready(function () {
 
         $.ajax({
             type: "DELETE",
-            url: "/event/delete/"+id,
-            // data: id,
+            url: "/event/delete/"+eventId,
             success: function (result) {
                 $('#success_message').html("");
                 $('#success_message').addClass('alert alert-success');
                 $('#success_message').text('Event deleted');
+                $('#delete_event'+eventId).remove();
             }
         });
     });

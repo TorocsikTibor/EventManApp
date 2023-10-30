@@ -44,7 +44,8 @@
                     </div>
                     <div class="form-label" id="inputField">
                         <label>Who can see the event</label>
-                        <select class="form-select users" name="users[]" multiple="" aria-label="multiple select example">
+                        <select class="form-select users" name="users[]" multiple=""
+                                aria-label="multiple select example">
                             @foreach($users as $user)
                                 <option value="{{$user->id}}">{{$user->name}}</option>
                             @endforeach

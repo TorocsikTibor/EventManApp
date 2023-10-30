@@ -13,6 +13,7 @@
 
                 <h4>Update event</h4>
                 <form id="AddEventForm" method="post" enctype="multipart/form-data">
+                    <input type="hidden" class="id" value="{{ $event->id }}">
                     <div class="form-label">
                         <label for="name">Name:</label>
                         <input type="text" class="form-control name" value="{{ $event->name }}" name="name">
@@ -27,7 +28,8 @@
                     </div>
                     <div class="form-label">
                         <label for="image">Image:</label>
-                        <input type="file" class="form-control image" name="image" value="{{ $event->image }}" id="image">
+                        <input type="file" class="form-control image" name="image" value="{{ $event->image }}"
+                               id="image">
                     </div>
                     <div class="form-label">
                         <label for="type">Type:</label>
@@ -35,7 +37,8 @@
                     </div>
                     <div class="form-label">
                         <label for="description">Description:</label>
-                        <textarea class="form-control description" name="description">{{ $event->description }}</textarea>
+                        <textarea class="form-control description"
+                                  name="description">{{ $event->description }}</textarea>
                     </div>
                     <div class="form-label">
                         <input type="checkbox" class="form-check-input checkbox" name="checkbox" id="toggleInput"
@@ -44,18 +47,17 @@
                     </div>
                     <div class="form-label" id="inputField">
                         <label>Who can see the event</label>
-                        <select class="form-select users" name="users[]" multiple="" aria-label="multiple select example">
+                        <select class="form-select users" name="users[]" multiple=""
+                                aria-label="multiple select example">
                             @foreach($users as $user)
-                                <option value="{{$user->id}}" {{ in_array($user->id, $selectedUsers) ? 'selected' : '' }}>{{$user->name}}</option>
+                                <option
+                                    value="{{$user->id}}" {{ in_array($user->id, $selectedUsers) ? 'selected' : '' }}>{{$user->name}}</option>
                             @endforeach
                         </select>
                     </div>
                     <div class="form-label">
                         <input type="submit" class="btn btn-primary update_event" value="Update">
                         <a href="{{ route('home') }}" class="btn btn-primary">Back</a>
-                        <input class="id" type="hidden"
-                               value="{{ $event->id }}">
-                        <input class="btn btn-danger delete_event" type="submit" value="Delete">
                     </div>
                 </form>
             </div>
@@ -63,6 +65,5 @@
     </div>
 
     <script src="{{ asset('public/js/updateEvent.js') }}"></script>
-    <script src="{{ asset('public/js/deleteEvent.js') }}"></script>
 
 @endsection

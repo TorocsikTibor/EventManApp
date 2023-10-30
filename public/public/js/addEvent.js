@@ -11,8 +11,6 @@ $(document).ready(function () {
         e.preventDefault();
 
         let formData = new FormData($('#AddEventForm')[0]);
-
-        console.log(formData);
         $.ajaxSetup({
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -31,14 +29,16 @@ $(document).ready(function () {
                     $('#success_message').html("");
                     $('#success_message').addClass('alert alert-success');
                     $('#success_message').text('Event created successfully');
-                } else {
-                    $('#saveform_errlist').html("");
-                    $('#saveform_errlist').addClass('alert alert-danger');
-                    $.each(response.errors, function (key, err_values) {
-                        $('#saveform_errlist').append('<li>' + err_values + '</li>');
-                    });
                 }
+            },
+            error: function (response) {
+                $('#saveform_errlist').html("");
+                $('#saveform_errlist').addClass('alert alert-danger');
+                $.each(response.responseJSON.errors, function (key, err_values) {
+                    $('#saveform_errlist').append('<li>' + err_values + '</li>');
+                });
             }
+
         });
     });
 });

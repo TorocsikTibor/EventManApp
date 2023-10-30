@@ -22,23 +22,22 @@ $(document).ready(function () {
 
         $.ajax({
             type: "POST",
-            url: "/event/update/"+id,
+            url:  id,
             data: formData,
             dataType: "json",
             processData: false,
             contentType: false,
             success: function (response) {
-                if (response.status == 200) {
-                    $('#success_message').html("");
-                    $('#success_message').addClass('alert alert-success');
-                    $('#success_message').text('Event updated successfully');
-                } else {
-                    $('#saveform_errlist').html("");
-                    $('#saveform_errlist').addClass('alert alert-danger');
-                    $.each(response.errors, function (key, err_values) {
-                        $('#saveform_errlist').append('<li>' + err_values + '</li>');
-                    });
-                }
+                $('#success_message').html("");
+                $('#success_message').addClass('alert alert-success');
+                $('#success_message').text('Event updated successfully');
+            },
+            error: function (response) {
+                $('#saveform_errlist').html("");
+                $('#saveform_errlist').addClass('alert alert-danger');
+                $.each(response.responseJSON.errors, function (key, err_values) {
+                    $('#saveform_errlist').append('<li>' + err_values + '</li>');
+                });
             }
         });
     });

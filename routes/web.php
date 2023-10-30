@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\EventController;
+use App\Http\Controllers\HomeController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
@@ -20,12 +22,17 @@ Route::get('/', function () {
 
 Auth::routes();
 
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
-Route::get('/event/create', [\App\Http\Controllers\EventController::class, 'showCreate'])->name('showCreate');
-Route::post('/event/create', [\App\Http\Controllers\EventController::class, 'create'])->name('eventCreate');
-Route::get('/event/update/{id}', [\App\Http\Controllers\EventController::class, 'showUpdate'])->name('showUpdate');
-Route::post('/event/update/{id}', [\App\Http\Controllers\EventController::class, 'update'])->name('eventUpdate');
-Route::delete('/event/delete/{id}', [\App\Http\Controllers\EventController::class, 'delete'])->name('eventDelete');
-Route::post('/event/attend/{id}', [\App\Http\Controllers\EventController::class, 'attend'])->name('attend');
-Route::get('/home/search', [\App\Http\Controllers\HomeController::class, 'search'])->name('search');
+Route::middleware(['auth'])->group(function () {
+    Route::get('/home', [HomeController::class, 'index'])->name('home');
+    Route::get('/event/create', [EventController::class, 'showCreate'])->name('showCreate');
+    Route::get('/event/update/{id}', [EventController::class, 'showUpdate'])->name('showUpdate');
+    Route::post('/event/create', [EventController::class, 'create'])->name('eventCreate');
+    Route::post('/event/attend/{id}', [EventController::class, 'attend'])->name('attend');
+    Route::post('/event/update/{id}', [EventController::class, 'update'])->name('eventUpdate');
+    Route::delete('/event/delete/{id}', [EventController::class, 'delete'])->name('eventDelete');
+    Route::get('/event/search', [EventController::class, 'search'])->name('search');
+});
+
+
+
 

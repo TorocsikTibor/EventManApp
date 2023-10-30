@@ -1,6 +1,7 @@
 <?php
 
 use App\services\EventService;
+use App\services\SearchService;
 use Illuminate\Support\Facades\Facade;
 use Illuminate\Support\ServiceProvider;
 
@@ -183,7 +184,8 @@ return [
     */
 
     'aliases' => Facade::defaultAliases()->merge([
-        'EventService' => EventService::class
+        'EventService' => EventService::class,
+        'SearchService' => SearchService::class,
     ])->toArray(),
 
 ];
