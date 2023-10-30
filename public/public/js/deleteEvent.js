@@ -3,7 +3,6 @@ $(document).ready(function () {
         e.preventDefault();
 
         let eventId = $(this).siblings(".deleteId").val();
-        console.log(eventId);
         $.ajaxSetup({
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')

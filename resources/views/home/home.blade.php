@@ -1,5 +1,5 @@
 @php use Illuminate\Support\Facades\Auth; @endphp
-@extends('layouts.app')
+@extends('app')
 
 @section('content')
     <div class="container">
@@ -25,7 +25,8 @@
                                     <option value="description">Description</option>
                                 </select>
                             </div>
-                            <input type="text" class="form-control searchValue" placeholder="Type here..." name="searchValue">
+                            <input type="text" class="form-control searchValue" placeholder="Type here..."
+                                   name="searchValue">
                         </div>
 
                         <input type="submit" class="btn btn-primary search" value="Search">
@@ -35,11 +36,12 @@
         </div>
 
 
-        <div class="card-group mt-3  justify-content-center">
+        <div class="card-group row mt-3 justify-content-center add_event"></div>
+        <div class="card-group row mt-3 justify-content-center">
             @foreach($events as $event)
-                <div id="delete_event{{$event->id}}">
-                    <div class="col-sm m-2  remove_event">
-                        <div class="card" style="width: 24rem;">
+                <div class="col-4" id="delete_event{{$event->id}}">
+                    <div class="m-2  remove_event">
+                        <div class="card">
                             <img class="card-img-top" src="public/images/{{ $event->image }}" alt="Card image cap">
                             <div class="card-body">
                                 @if( $event->owner_id !== Auth::id() )

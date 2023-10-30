@@ -33,6 +33,6 @@ class HomeController extends Controller
             $joinedEventIds[] = $eventUser->id;
         }
 
-        return view('home', ['events' => $visibleEvents, 'joinedEventIds' => $joinedEventIds]);
+        return view('home/home', ['events' => $visibleEvents, 'joinedEventIds' => $joinedEventIds]);
     }
 }

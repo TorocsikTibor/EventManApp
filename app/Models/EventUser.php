@@ -10,7 +10,7 @@ class EventUser extends Pivot
 {
     use HasFactory;
 
-    protected $guarded = ['id'];
+    protected $fillable = ['user_id', 'event_id'];
     protected $table = 'event_user';
     public $timestamps = false;
 

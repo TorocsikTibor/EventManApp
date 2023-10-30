@@ -21,13 +21,14 @@ $(document).ready(function () {
             dataType: "json",
             data: data,
             success: function (response) {
-                console.log(response);
                 $('.remove_event').remove();
-                var searchedEvents = response.searchedEvents;
-                var authenticatedUserId = response.AuthId;
+                let searchedEvents = response.searchedEvents;
+                let authenticatedUserId = response.AuthId;
                 $.each(searchedEvents, function (index, event) {
 
-                    let cardHTML = '<div class="card" style="width: 24rem;">' +
+                    let cardHTML = '<div class="col-4" id="delete_event' + authenticatedUserId + '">' +
+                        '<div class="m-2  remove_event">' +
+                        '<div class="card">' +
                         '<img class="card-img-top" src="public/images/' + event.image + '" alt="Card image cap">' +
                         '<div class="card-body">';
 
@@ -53,7 +54,14 @@ $(document).ready(function () {
                         '</ul>' +
                         '<h5>Description:</h5>' +
                         '<p class="card-text">' + event.description + '</p>' +
-                        '<p>Creator: ' + event.event_owner.name + '</p>' +
+                        '<p>Creator: ' + event.event_owner.name + '</p>';
+                    if (authenticatedUserId === event.owner_id) {
+                        cardHTML += '<div class="flex justify-content-end">' +
+                            '<input type="hidden" class="deleteId" value="' + event.id + '">' +
+                            '<input class="btn btn-danger delete_event" type="submit" value="Delete">' +
+                            '</div>';
+                    }
+                    cardHTML += '</div>' +
                         '</div>' +
                         '</div>';
                     $(".add_event").append(cardHTML);
