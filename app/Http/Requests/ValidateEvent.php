@@ -36,10 +36,4 @@ class ValidateEvent extends FormRequest
             'users' => 'sometimes|array',
         ];
     }
-
-    public function response(): JsonResponse
-    {
-        return response()->json(['errors' => json_decode($this->validationErrors)], 422);
-    }
-
 }

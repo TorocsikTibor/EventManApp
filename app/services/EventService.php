@@ -43,6 +43,7 @@ class EventService
                 ]);
 
             if (isset($users)) {
+                $users[] = Auth::id();
                 EventVisibility::where('event_id', $event->id)->delete();
                 foreach ($users as $user) {
                     EventVisibility::updateOrCreate(
