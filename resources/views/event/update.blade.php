@@ -64,6 +64,6 @@
         </div>
     </div>
 
-    <script src="{{ asset('public/js/updateEvent.js') }}"></script>
+    <script src="{{ asset('js/updateEvent.js') }}"></script>
 
 @endsection

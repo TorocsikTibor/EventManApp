@@ -23,7 +23,7 @@ class EventService
     ): void {
         if (is_file($file)) {
             $filename = date('YmdHis') . $file->getClientOriginalName();
-            $file->move(public_path('public/images'), $filename);
+            $file->move(public_path('images'), $filename);
         }
         DB::beginTransaction();
         try {

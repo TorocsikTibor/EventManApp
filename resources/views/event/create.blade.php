@@ -60,6 +60,6 @@
         </div>
     </div>
 
-    <script src="{{ asset('public/js/addEvent.js') }}"></script>
+    <script src="{{ asset('js/addEvent.js') }}"></script>
 
 @endsection
