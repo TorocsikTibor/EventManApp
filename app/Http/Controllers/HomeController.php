@@ -10,18 +10,13 @@ use Illuminate\Support\Facades\Auth;
 
 class HomeController extends Controller
 {
-
-    public function __construct()
-    {
-        $this->middleware('auth');
-    }
-
     public function index(): View|Application|Factory
     {
-
-        $visibleEvents = Event::with('userVisibility:id')->where('is_private', 0)->orWhereHas('userVisibility', function ($q) {
-            $q->where('users.id', Auth::id());
-        })->get();
+        $visibleEvents = Event::with('userVisibility:id')
+            ->where('is_private', 0)
+            ->orWhereHas('userVisibility', function ($q) {
+                $q->where('users.id', Auth::id());
+            })->get();
 
         $joinedEventIds = [];
 

@@ -21,17 +21,14 @@ class EventService
         int $isPrivate,
         mixed $users
     ): void {
-        if (is_file($file)) {
-            $filename = date('YmdHis') . $file->getClientOriginalName();
-            $file->move(public_path('public/images'), $filename);
-        }
+        $filename = $this->saveFile($file);
+
         DB::beginTransaction();
         try {
-
             $event = Event::updateOrCreate(
                 [
                     'name' => $name,
-                    'owner_id' => Auth::id(),
+                    'user_id' => Auth::id(),
                     'date' => $date,
                 ],
                 [
@@ -40,20 +37,11 @@ class EventService
                     'type' => $type,
                     'description' => $description,
                     'is_private' => $isPrivate,
-                ]);
+                ]
+            );
 
-            if (isset($users)) {
-                EventVisibility::where('event_id', $event->id)->delete();
-                foreach ($users as $user) {
-                    EventVisibility::updateOrCreate(
-                        [
-                            'user_id' => $user,
-                            'event_id' => $event->id,
-                        ],
-                        []
-                    );
-                }
-            }
+            $this->updateOrCreateUsersVisibility($users, $event);
+
             DB::commit();
         } catch (Exception) {
             DB::rollback();
@@ -71,5 +59,33 @@ class EventService
         $eventUser->user_id = Auth::id();
         $eventUser->event_id = $id;
         $eventUser->save();
+    }
+
+    private function saveFile(mixed $file): ?string
+    {
+        $filename = null;
+        if (is_file($file)) {
+            $filename = date('YmdHis') . $file->getClientOriginalName();
+            $file->move(public_path('images'), $filename);
+        }
+
+        return $filename;
+    }
+
+    private function updateOrCreateUsersVisibility(mixed $users, Event $event): void
+    {
+        if (isset($users)) {
+            $users[] = Auth::id();
+            EventVisibility::where('event_id', $event->id)->delete();
+            foreach ($users as $user) {
+                EventVisibility::updateOrCreate(
+                    [
+                        'user_id' => $user,
+                        'event_id' => $event->id,
+                    ],
+                    []
+                );
+            }
+        }
     }
 }

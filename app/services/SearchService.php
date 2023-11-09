@@ -10,7 +10,6 @@ class SearchService
 {
     public function search($searchValue, $inputValue): JsonResponse
     {
-
         $searchedEvents = Event::with('userVisibility:id')
             ->where(function ($q) use ($inputValue, $searchValue) {
                 $q->where('is_private', 0)
@@ -22,7 +21,11 @@ class SearchService
                 });
             })
             ->where("$inputValue", 'LIKE', '%'.$searchValue.'%')->with('eventOwner')
-            ->get();
+            ->get()
+            ->map(function (Event $event) {
+                $event->image = $event->getImagePath();
+                return $event;
+            });
 
         $response = [ 'searchedEvents' => $searchedEvents, 'AuthId' => Auth::id() ];
 

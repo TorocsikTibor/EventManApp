@@ -3,7 +3,6 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth;
 
 class ValidateEvent extends FormRequest
@@ -36,10 +35,4 @@ class ValidateEvent extends FormRequest
             'users' => 'sometimes|array',
         ];
     }
-
-    public function response(): JsonResponse
-    {
-        return response()->json(['errors' => json_decode($this->validationErrors)], 422);
-    }
-
 }

@@ -15,7 +15,7 @@ class EventTestSeeder extends Seeder
     {
         DB::table('events')->insert([
             'name' => 'test',
-            'owner_id' => 1,
+            'user_id' => 1,
             'date' => '2023-10-31 20:00:00',
             'location' => "Hungary",
             'image' => "20231030195408new.png",

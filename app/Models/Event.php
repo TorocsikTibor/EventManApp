@@ -12,11 +12,16 @@ class Event extends Model
     use HasFactory;
 
     protected $table = 'events';
-    protected $fillable = ['owner_id', 'name', 'date', 'location', 'image', 'type', 'description', 'is_private'];
+    protected $fillable = ['user_id', 'name', 'date', 'location', 'image', 'type', 'description', 'is_private'];
+
+    public function getImagePath(): string
+    {
+        return asset('images' . DIRECTORY_SEPARATOR . $this->image);
+    }
 
     public function eventOwner(): BelongsTo
     {
-        return $this->belongsTo(User::class, 'owner_id');
+        return $this->belongsTo(User::class, 'user_id');
     }
 
     public function user(): BelongsToMany

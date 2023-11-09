@@ -13,40 +13,32 @@ use Illuminate\Contracts\View\View;
 use Illuminate\Foundation\Application;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class EventController extends Controller
 {
-    private EventService $eventService;
-    private SearchService $searchService;
-
-    public function __construct(EventService $eventService, SearchService $searchService)
-    {
-        $this->eventService = $eventService;
-        $this->searchService = $searchService;
-    }
-
     public function showCreate(): View|Application|Factory
     {
-        $users = User::all();
+        $users = User::all()->except(Auth::id());
 
         return view('event/create', ['users' => $users]);
     }
 
-    public function create(ValidateEvent $request): JsonResponse
+    public function create(ValidateEvent $request, EventService $eventService): JsonResponse
     {
-            $validated = $request->validated();
-            $is_private = $request->has('checkbox') ? 1 : 0;
+        $validated = $request->validated();
+        $isPrivate = $request->has('checkbox');
 
-            $this->eventService->updateOrCreate(
-                $validated['name'],
-                $validated['date'],
-                $validated['location'],
-                $request->file('image') ?? "",
-                $validated['type'],
-                $validated['description'],
-                $is_private,
-                $request->input('users')
-            );
+        $eventService->updateOrCreate(
+            $validated['name'],
+            $validated['date'],
+            $validated['location'],
+            $request->file('image') ?? "",
+            $validated['type'],
+            $validated['description'],
+            $isPrivate,
+            $request->input('users')
+        );
 
         return response()->json([
             'status' => 200,
@@ -58,31 +50,35 @@ class EventController extends Controller
     public function showUpdate(int $id): View|Application|Factory
     {
         $event = Event::find($id);
-        $users = User::all();
-        $eventvisibility = EventVisibility::where('event_id', $id)->get();
+        $users = User::all()->except(Auth::id());
+        $eventVisibility = EventVisibility::where('event_id', $id)->get();
 
         $selectedUsers = [];
-        foreach ($eventvisibility as $userVisible) {
+        foreach ($eventVisibility as $userVisible) {
             $selectedUsers[] = $userVisible->user_id;
         }
 
-        return view('event/update', [ 'event' => $event, 'users' => $users, 'selectedUsers' => $selectedUsers ]);
+        return view('event/update', [
+            'event' => $event,
+            'users' => $users,
+            'selectedUsers' => $selectedUsers,
+        ]);
     }
 
-    public function update(ValidateEvent $request, int $id): JsonResponse
+    public function update(ValidateEvent $request, EventService $eventService, int $id): JsonResponse
     {
-        $is_private = isset($request->checkbox) ? 1 : 0;
+        $isPrivate = isset($request->checkbox);
         $validated = $request->validated();
         $imageName = Event::find($id);
 
-        $this->eventService->updateOrCreate(
+        $eventService->updateOrCreate(
             $validated['name'],
             $validated['date'],
             $validated['location'],
             $request->file('image') ?? $imageName->image,
             $validated['type'],
             $validated['description'],
-            $is_private,
+            $isPrivate,
             $request->input('users'),
         );
 
@@ -93,9 +89,9 @@ class EventController extends Controller
 
     }
 
-    public function delete(int $id): JsonResponse
+    public function delete(int $id, EventService $eventService): JsonResponse
     {
-        $this->eventService->delete($id);
+        $eventService->delete($id);
 
         return response()->json([
             'message' => 'success',
@@ -103,9 +99,9 @@ class EventController extends Controller
         ]);
     }
 
-    public function attend(int $id): JsonResponse
+    public function attend(int $id, EventService $eventService): JsonResponse
     {
-        $this->eventService->attend($id);
+        $eventService->attend($id);
 
         return response()->json([
             'status' => 200,
@@ -113,8 +109,11 @@ class EventController extends Controller
         ]);
     }
 
-    public function search(Request $request): JsonResponse
+    public function search(Request $request, SearchService $searchService): JsonResponse
     {
-        return $this->searchService->search($request->input('searchValue'), $request->input('select'));
+        return $searchService->search(
+            $request->input('searchValue'),
+            $request->input('select')
+        );
     }
 }

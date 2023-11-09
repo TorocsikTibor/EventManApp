@@ -28,7 +28,7 @@
                     </div>
                     <div class="form-label">
                         <label for="image">Image:</label>
-                        <input type="file" class="form-control image" name="image" value="{{ $event->image }}"
+                        <input type="file" class="form-control image" name="image" value="{{ $event->getImagePath() }}"
                                id="image">
                     </div>
                     <div class="form-label">
@@ -64,6 +64,6 @@
         </div>
     </div>
 
-    <script src="{{ asset('public/js/updateEvent.js') }}"></script>
+    <script src="{{ asset('js/updateEvent.js') }}"></script>
 
 @endsection

@@ -13,7 +13,6 @@ $(document).ready(function () {
         let formData = new FormData($('#AddEventForm')[0]);
         let id = $('.id').val();
 
-        console.log(formData);
         $.ajaxSetup({
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -27,7 +26,7 @@ $(document).ready(function () {
             dataType: "json",
             processData: false,
             contentType: false,
-            success: function (response) {
+            success: function () {
                 $('#success_message').html("");
                 $('#success_message').addClass('alert alert-success');
                 $('#success_message').text('Event updated successfully');
