@@ -12,7 +12,7 @@ $(document).ready(function () {
         $.ajax({
             type: "DELETE",
             url: "/event/delete/"+eventId,
-            success: function (result) {
+            success: function () {
                 $('#success_message').html("");
                 $('#success_message').addClass('alert alert-success');
                 $('#success_message').text('Event deleted');

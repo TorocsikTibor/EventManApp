@@ -45,7 +45,7 @@ class User extends Authenticatable
 
     public function eventOwner(): HasOne
     {
-        return $this->hasOne(Event::class, 'owner_id');
+        return $this->hasOne(Event::class, 'user_id');
     }
 
     public function event()

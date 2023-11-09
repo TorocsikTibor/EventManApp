@@ -19,7 +19,7 @@ class EnsureAuthUserIsEventOwner
     {
         $id = $request->route('id');
         $event = Event::find($id);
-        if ($event->owner_id !== Auth::id()) {
+        if ($event->user_id !== Auth::id()) {
             return redirect('home');
         }
         return $next($request);

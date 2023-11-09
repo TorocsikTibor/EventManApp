@@ -12,7 +12,7 @@ class Event extends Model
     use HasFactory;
 
     protected $table = 'events';
-    protected $fillable = ['owner_id', 'name', 'date', 'location', 'image', 'type', 'description', 'is_private'];
+    protected $fillable = ['user_id', 'name', 'date', 'location', 'image', 'type', 'description', 'is_private'];
 
     public function getImagePath(): string
     {
@@ -21,7 +21,7 @@ class Event extends Model
 
     public function eventOwner(): BelongsTo
     {
-        return $this->belongsTo(User::class, 'owner_id');
+        return $this->belongsTo(User::class, 'user_id');
     }
 
     public function user(): BelongsToMany

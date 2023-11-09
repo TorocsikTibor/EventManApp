@@ -35,10 +35,10 @@ class SearchTest extends TestCase
 
         $expectedResult = [
            [ 'name' => 'test',
-            'owner_id' => 1,
+            'user_id' => 1,
             'date' => '2023-10-31 20:00:00',
             'location' => "Hungary",
-            'image' => "20231030195408new.png",
+            'image' => asset('images' . DIRECTORY_SEPARATOR . '20231030195408new.png'),
             'type' => 'concert',
             'description' => 'test desc',
             'is_private' => 0,]

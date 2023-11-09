@@ -25,14 +25,13 @@ $(document).ready(function () {
                 let searchedEvents = response.searchedEvents;
                 let authenticatedUserId = response.AuthId;
                 $.each(searchedEvents, function (index, event) {
-
                     let cardHTML = '<div class="col-4" id="delete_event' + authenticatedUserId + '">' +
                         '<div class="m-2  remove_event">' +
                         '<div class="card">' +
-                        '<img class="card-img-top" src="public/images/' + event.image + '" alt="Card image cap">' +
+                        '<img class="card-img-top" src="' + event.image + '" alt="Card image cap">' +
                         '<div class="card-body">';
 
-                    if (event.owner_id !== authenticatedUserId) {
+                    if (event.user_id !== authenticatedUserId) {
                         cardHTML += '<h4 class="card-title">' + event.name + '</h4>';
 
                         if (event.user_visibility.includes(event.id)) {
@@ -55,7 +54,7 @@ $(document).ready(function () {
                         '<h5>Description:</h5>' +
                         '<p class="card-text">' + event.description + '</p>' +
                         '<p>Creator: ' + event.event_owner.name + '</p>';
-                    if (authenticatedUserId === event.owner_id) {
+                    if (authenticatedUserId === event.user_id) {
                         cardHTML += '<div class="flex justify-content-end">' +
                             '<input type="hidden" class="deleteId" value="' + event.id + '">' +
                             '<input class="btn btn-danger delete_event" type="submit" value="Delete">' +

@@ -26,19 +26,19 @@ class EventController extends Controller
 
     public function create(ValidateEvent $request, EventService $eventService): JsonResponse
     {
-            $validated = $request->validated();
-            $is_private = $request->has('checkbox');
+        $validated = $request->validated();
+        $isPrivate = $request->has('checkbox');
 
-            $eventService->updateOrCreate(
-                $validated['name'],
-                $validated['date'],
-                $validated['location'],
-                $request->file('image') ?? "",
-                $validated['type'],
-                $validated['description'],
-                $is_private,
-                $request->input('users')
-            );
+        $eventService->updateOrCreate(
+            $validated['name'],
+            $validated['date'],
+            $validated['location'],
+            $request->file('image') ?? "",
+            $validated['type'],
+            $validated['description'],
+            $isPrivate,
+            $request->input('users')
+        );
 
         return response()->json([
             'status' => 200,
@@ -51,19 +51,23 @@ class EventController extends Controller
     {
         $event = Event::find($id);
         $users = User::all()->except(Auth::id());
-        $eventvisibility = EventVisibility::where('event_id', $id)->get();
+        $eventVisibility = EventVisibility::where('event_id', $id)->get();
 
         $selectedUsers = [];
-        foreach ($eventvisibility as $userVisible) {
+        foreach ($eventVisibility as $userVisible) {
             $selectedUsers[] = $userVisible->user_id;
         }
 
-        return view('event/update', [ 'event' => $event, 'users' => $users, 'selectedUsers' => $selectedUsers ]);
+        return view('event/update', [
+            'event' => $event,
+            'users' => $users,
+            'selectedUsers' => $selectedUsers,
+        ]);
     }
 
     public function update(ValidateEvent $request, EventService $eventService, int $id): JsonResponse
     {
-        $is_private = isset($request->checkbox);
+        $isPrivate = isset($request->checkbox);
         $validated = $request->validated();
         $imageName = Event::find($id);
 
@@ -74,7 +78,7 @@ class EventController extends Controller
             $request->file('image') ?? $imageName->image,
             $validated['type'],
             $validated['description'],
-            $is_private,
+            $isPrivate,
             $request->input('users'),
         );
 
@@ -107,6 +111,9 @@ class EventController extends Controller
 
     public function search(Request $request, SearchService $searchService): JsonResponse
     {
-        return $searchService->search($request->input('searchValue'), $request->input('select'));
+        return $searchService->search(
+            $request->input('searchValue'),
+            $request->input('select')
+        );
     }
 }
