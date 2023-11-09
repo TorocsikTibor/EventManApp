@@ -25,13 +25,18 @@ Auth::routes();
 Route::middleware(['auth'])->group(function () {
     Route::get('/home', [HomeController::class, 'index'])->name('home');
     Route::get('/event/create', [EventController::class, 'showCreate'])->name('showCreate');
-    Route::get('/event/update/{id}', [EventController::class, 'showUpdate'])->middleware('owner')->name('showUpdate');
     Route::post('/event/create', [EventController::class, 'create'])->name('eventCreate');
     Route::post('/event/attend/{id}', [EventController::class, 'attend'])->name('attend');
-    Route::post('/event/update/{id}', [EventController::class, 'update'])->name('eventUpdate');
-    Route::delete('/event/delete/{id}', [EventController::class, 'delete'])->name('eventDelete');
     Route::get('/event/search', [EventController::class, 'search'])->name('search');
+
+    Route::middleware(['owner'])->group(function() {
+        Route::get('/event/update/{id}', [EventController::class, 'showUpdate'])->name('showUpdate');
+        Route::post('/event/update/{id}', [EventController::class, 'update'])->name('eventUpdate');
+        Route::delete('/event/delete/{id}', [EventController::class, 'delete'])->name('eventDelete');
+    });
 });
+
+
 
 
 

@@ -14,9 +14,9 @@ class Event extends Model
     protected $table = 'events';
     protected $fillable = ['owner_id', 'name', 'date', 'location', 'image', 'type', 'description', 'is_private'];
 
-    public function getImagePath()
+    public function getImagePath(): string
     {
-        return "/images/{$this->image}";
+        return asset('images' . DIRECTORY_SEPARATOR . $this->image);
     }
 
     public function eventOwner(): BelongsTo
